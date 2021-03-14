@@ -40,6 +40,35 @@ $ helm install prometheus prometheus-community/prometheus \
 Now, check if Prometheus components are deployed as expected:
 ```
 $ kubectl get all -n prometheus
+NAME                                                 READY   STATUS    RESTARTS   AGE
+pod/prometheus-alertmanager-6fb6b44d8f-ghk2z         2/2     Running   0          102s
+pod/prometheus-kube-state-metrics-577cdff758-tk4s2   1/1     Running   0          102s
+pod/prometheus-node-exporter-8nst7                   1/1     Running   0          102s
+pod/prometheus-node-exporter-nlftq                   1/1     Running   0          102s
+pod/prometheus-pushgateway-5456d784bc-c6hbx          1/1     Running   0          102s
+pod/prometheus-server-6c8cd688cd-m7hrf               2/2     Running   0          102s
+
+NAME                                    TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)    AGE
+service/prometheus-alertmanager         ClusterIP   172.20.91.181    <none>        80/TCP     105s
+service/prometheus-kube-state-metrics   ClusterIP   172.20.211.233   <none>        8080/TCP   105s
+service/prometheus-node-exporter        ClusterIP   None             <none>        9100/TCP   105s
+service/prometheus-pushgateway          ClusterIP   172.20.133.92    <none>        9091/TCP   105s
+service/prometheus-server               ClusterIP   172.20.18.144    <none>        80/TCP     105s
+
+NAME                                      DESIRED   CURRENT   READY   UP-TO-DATE   AVAILABLE   NODE SELECTOR   AGE
+daemonset.apps/prometheus-node-exporter   2         2         2       2            2           <none>          104s
+
+NAME                                            READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/prometheus-alertmanager         1/1     1            1           104s
+deployment.apps/prometheus-kube-state-metrics   1/1     1            1           104s
+deployment.apps/prometheus-pushgateway          1/1     1            1           104s
+deployment.apps/prometheus-server               1/1     1            1           104s
+
+NAME                                                       DESIRED   CURRENT   READY   AGE
+replicaset.apps/prometheus-alertmanager-6fb6b44d8f         1         1         1       105s
+replicaset.apps/prometheus-kube-state-metrics-577cdff758   1         1         1       105s
+replicaset.apps/prometheus-pushgateway-5456d784bc          1         1         1       105s
+replicaset.apps/prometheus-server-6c8cd688cd               1         1         1       105s
 ```
 ### Deploy Grafana
 To deploy grafana, first create a YAML file called `grafana.yaml`with following commands:
@@ -71,7 +100,18 @@ $ helm install grafana grafana/grafana \
 
 Check, if all grafana components are deployed as expected:
 ```
-$ kubectl get pods all -n grafana
+$ kubectl get all -n grafana
+NAME                          READY   STATUS    RESTARTS   AGE
+pod/grafana-b45d565bd-7795q   1/1     Running   0          2m51s
+
+NAME              TYPE           CLUSTER-IP     EXTERNAL-IP                                                               PORT(S)        AGE
+service/grafana   LoadBalancer   172.20.61.31   adfecf161cab23hshc8f3793c42c6c5d9f89c-1430368260.us-west-2.elb.amazonaws.com   80:32542/TCP   2m52s
+
+NAME                      READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/grafana   1/1     1            1           2m53s
+
+NAME                                DESIRED   CURRENT   READY   AGE
+replicaset.apps/grafana-b45d565bd   1         1         1       2m53s
 ```
 ### Access Grafana
 To access grafana ELB URL, run command:
